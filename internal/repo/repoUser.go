@@ -5,7 +5,7 @@ import (
 	"avito_bootcamp/internal/entity"
 	"database/sql"
 
-	"log"
+	"github.com/sirupsen/logrus"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -18,7 +18,7 @@ func InitRepo() (*MysqlUserRepo, error) {
 	cfg := config.InitConfigDB()
 	db, err := sql.Open("mysql", cfg.UserDB+":"+cfg.PasswordDB+"@/"+cfg.NameDB)
 	if err != nil {
-		log.Println(err)
+		logrus.Error(err)
 		return nil, err
 	}
 
@@ -28,22 +28,33 @@ func InitRepo() (*MysqlUserRepo, error) {
 }
 
 func (repo *MysqlUserRepo) Create(user *entity.User) error {
+	logrus.Debug("repo create started")
 	_, err := repo.db.Exec("INSERT INTO Users(Name, Password, Role) VALUES (?,?,?)", user.Name, user.Password, user.Role)
+
 	if err != nil {
+		logrus.Error(err)
 		return err
 	}
 	return nil
 }
 
 func (repo *MysqlUserRepo) Get(userName string) (*entity.User, error) {
+	logrus.Debug("repo user started")
 	var User entity.User
 	rows, err := repo.db.Query("SELECT Name, Password, Role FROM Users WHERE Name = ?", userName)
 	if err != nil {
+		logrus.Error(err)
 		return &User, err
 	}
 
-	rows.Next()
-	rows.Scan(&User.Name, &User.Password, &User.Role)
+	if !rows.Next() {
+		logrus.Info("table users is empty")
+	}
+	err = rows.Scan(&User.Name, &User.Password, &User.Role)
+	if err != nil {
+		logrus.Error(err)
+		return &User, err
+	}
 	return &User, nil
 
 }

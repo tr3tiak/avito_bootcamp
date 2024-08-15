@@ -2,26 +2,29 @@ package pkg
 
 import (
 	"avito_bootcamp/internal/entity"
-	"fmt"
 	"os"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/sirupsen/logrus"
 	"golang.org/x/crypto/bcrypt"
 )
 
 func GenerateJWTToken(user *entity.User) (string, error) {
+	logrus.Info("generate token started")
 	claims := jwt.MapClaims{
 		"sub":  user.Name,
 		"role": user.Role,
 	}
-	token := jwt.NewWithClaims(jwt.SigningMethodES256, claims)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	secretKey := GetSecretKey()
-	tokenString, err := token.SignedString(secretKey)
+
+	tokenString, err := token.SignedString([]byte(secretKey))
 	if err != nil {
-		fmt.Println(err)
+		logrus.Error("token signed error", err)
 		return "", err
 	}
+	logrus.Info("Generate token complete")
 	return tokenString, nil
 }
 
@@ -50,10 +53,14 @@ func EncryptedPassword(pass string) (string, error) {
 
 }
 
-func ComparePassword(EncryptedPassword string, password string) error {
-	err := bcrypt.CompareHashAndPassword([]byte(EncryptedPassword), []byte(password))
+func ComparePassword(hashedPassword string, password string) error {
+	logrus.Info("compare password started")
+
+	err := bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password))
 	if err != nil {
+		logrus.Error("compareHash", err)
 		return err
 	}
+	logrus.Info("Compare password over")
 	return nil
 }

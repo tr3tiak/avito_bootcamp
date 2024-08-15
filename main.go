@@ -6,6 +6,8 @@ import (
 	"avito_bootcamp/internal/usecases"
 	"net/http"
 
+	"github.com/sirupsen/logrus"
+
 	"github.com/gorilla/mux"
 )
 
@@ -19,6 +21,7 @@ func main() {
 	router := mux.NewRouter()
 	router.HandleFunc("/register", controller.HandlerRegister)
 	router.HandleFunc("/login", controller.HandlerLogin)
+	logrus.Info("starting server")
 	http.ListenAndServe("localhost:8080", router)
 
 }
