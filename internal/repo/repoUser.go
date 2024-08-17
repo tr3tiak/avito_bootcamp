@@ -27,7 +27,7 @@ func InitRepo() (*MysqlUserRepo, error) {
 	}, nil
 }
 
-func (repo *MysqlUserRepo) Create(user *entity.User) error {
+func (repo MysqlUserRepo) Create(user *entity.User) error {
 	logrus.Info("repo create started")
 	_, err := repo.db.Exec("INSERT INTO Users(Name, Password, Role) VALUES (?,?,?)", user.Name, user.Password, user.Role)
 
@@ -39,7 +39,7 @@ func (repo *MysqlUserRepo) Create(user *entity.User) error {
 	return nil
 }
 
-func (repo *MysqlUserRepo) Get(userName string) (*entity.User, error) {
+func (repo MysqlUserRepo) Get(userName string) (*entity.User, error) {
 	logrus.Info("repo user started")
 	var User entity.User
 	rows, err := repo.db.Query("SELECT Name, Password, Role FROM Users WHERE Name = ?", userName)

@@ -32,7 +32,7 @@ func InitHouseRepo() (*HouseRepo, error) {
 	}, nil
 }
 
-func (repo *HouseRepo) CreateHouse(house *entity.House) (*entity.House, error) {
+func (repo HouseRepo) CreateHouse(house *entity.House) (*entity.House, error) {
 	logrus.Info("house repo create started")
 	now := time.Now()
 

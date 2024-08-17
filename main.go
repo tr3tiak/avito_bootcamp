@@ -21,14 +21,22 @@ func main() {
 	if err != nil {
 		return
 	}
+	repoFlat, err := repo.InitFlatRepo()
+	if err != nil {
+		return
+	}
 	usecaseUser := usecases.InitUseCaseUser(repoUser)
 	usecaseHouse := usecases.InitUseCaseHouse(repoHouse)
+	usecaseFlat := usecases.InitUseCaseFlat(repoFlat)
 	ControllerUser := controller.InitController(usecaseUser)
 	ControllerHouse := controller.InitControllerHouse(usecaseHouse)
+	ControllerFlat := controller.InitControllerFlat(usecaseFlat)
 	router := mux.NewRouter()
 	router.HandleFunc("/register", ControllerUser.HandlerRegister)
 	router.HandleFunc("/login", ControllerUser.HandlerLogin)
 	router.HandleFunc("/house/create", middleware.AuthMiddleware(middleware.AccessMiddleware(ControllerHouse.HandlerCreateHouse)))
+	router.HandleFunc("/flat/create", middleware.AuthMiddleware(ControllerFlat.HandlerCreateFlat))
+	router.HandleFunc("/flat/update", middleware.AuthMiddleware(middleware.AccessMiddleware(ControllerFlat.HandlerUpdateStatus)))
 	logrus.Info("starting server")
 	http.ListenAndServe("localhost:8080", router)
 

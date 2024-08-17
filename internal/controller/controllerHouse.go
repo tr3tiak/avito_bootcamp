@@ -18,7 +18,7 @@ func InitControllerHouse(uc entity.HouseUseCase) *ControllerHouse {
 	}
 }
 
-func (c *ControllerHouse) HandlerCreateHouse(w http.ResponseWriter, r *http.Request) {
+func (c ControllerHouse) HandlerCreateHouse(w http.ResponseWriter, r *http.Request) {
 	logrus.Info("controller house started")
 	var house entity.House
 	decoder := json.NewDecoder(r.Body)
