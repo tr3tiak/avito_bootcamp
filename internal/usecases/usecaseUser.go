@@ -18,7 +18,7 @@ func InitUseCaseUser(ur entity.UserRepo) UsecaseUser {
 }
 
 func (uc UsecaseUser) Register(user *entity.User) error {
-	logrus.Debug("usecase register started")
+	logrus.Info("usecase register started")
 	encPass, err := pkg.EncryptedPassword(user.Password)
 	if err != nil {
 		return err
@@ -28,12 +28,12 @@ func (uc UsecaseUser) Register(user *entity.User) error {
 	if err != nil {
 		return err
 	}
-	logrus.Debug("usecase register complete")
+	logrus.Info("usecase register complete")
 	return nil
 }
 
 func (uc UsecaseUser) Login(user *entity.User) (string, error) {
-	logrus.Debug("usecase login started")
+	logrus.Info("usecase login started")
 	expectedUser, err := uc.repo.Get(user.Name)
 	if err != nil {
 		logrus.Error(err)
@@ -47,7 +47,7 @@ func (uc UsecaseUser) Login(user *entity.User) (string, error) {
 	if err != nil {
 		logrus.Error("generate token error", err)
 	}
-	logrus.Debug("usecase login complete")
+	logrus.Info("usecase login complete")
 	return tokenString, nil
 
 }

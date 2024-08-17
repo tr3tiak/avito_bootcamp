@@ -28,14 +28,15 @@ func GenerateJWTToken(user *entity.User) (string, error) {
 	return tokenString, nil
 }
 
-func ValidateToken(tokenString string) error {
+func ValidateToken(tokenString string) (string, error) {
 	token, err := jwt.Parse(tokenString, func(t *jwt.Token) (interface{}, error) {
-		return GetSecretKey(), nil
+		return []byte(GetSecretKey()), nil
 	})
-	if _, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
-		return nil
+	if tokenClaims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		response := tokenClaims["role"].(string)
+		return response, nil
 	}
-	return err
+	return "", err
 
 }
 

@@ -15,7 +15,7 @@ func InitConfigDB() *ConfigDB {
 	cfg := ConfigDB{
 		UserDB:     os.Getenv("user_db"),
 		PasswordDB: os.Getenv("password_db"),
-		NameDB:     os.Getenv("name_db"),
+		NameDB:     os.Getenv("namedb"),
 		Port:       os.Getenv("port"),
 	}
 	return &cfg

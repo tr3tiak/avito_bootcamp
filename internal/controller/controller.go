@@ -19,7 +19,7 @@ func InitController(uc entity.UserUsecase) ControllerUser {
 }
 
 func (c *ControllerUser) HandlerRegister(w http.ResponseWriter, r *http.Request) {
-	logrus.Debug("handler register started")
+	logrus.Info("handler register started")
 	user := entity.User{}
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&user)
@@ -29,11 +29,11 @@ func (c *ControllerUser) HandlerRegister(w http.ResponseWriter, r *http.Request)
 	}
 
 	w.WriteHeader(http.StatusOK)
-	logrus.Debug("handler register complete")
+	logrus.Info("handler register complete")
 }
 
 func (c *ControllerUser) HandlerLogin(w http.ResponseWriter, r *http.Request) {
-	logrus.Debug("handler login started")
+	logrus.Info("handler login started")
 	user := entity.User{}
 	decoder := json.NewDecoder(r.Body)
 	decoder.Decode(&user)
@@ -44,5 +44,5 @@ func (c *ControllerUser) HandlerLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	w.Header().Set("Authorization", "Bearer "+token)
 	w.WriteHeader(http.StatusOK)
-	logrus.Debug("handler login complete")
+	logrus.Info("handler login complete")
 }
